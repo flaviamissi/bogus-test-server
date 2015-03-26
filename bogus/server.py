@@ -1,4 +1,3 @@
-import SimpleHTTPServer
 import SocketServer
 from threading import Thread
 
@@ -13,10 +12,10 @@ class BogusHandler(SocketServer.StreamRequestHandler):
 
     def handle(self):
         """
-        Handles requests by parsing them and finding if there's any handlers registered to
-        handle them, if it doesn't find any handlers and promiscuous is set to True, it
-        responds with an empty body and a 200 status code, if promiscuous is set to False
-        it returns an empty body and a 404 status code.
+        Parse requests to find registered handlers to redirect them, if it
+        doesn't find any handlers and promiscuous is set to True, the server will
+        respond with an empty body and a 200 status code. If promiscuous is set
+        to False it returns an empty body and a 404 status code.
         """
         self.raw_requestline = self.rfile.readline(65537)
         self.parse_request()
@@ -77,7 +76,7 @@ class BogusHandler(SocketServer.StreamRequestHandler):
         elif len(words) == 2:
             method, path = words
         else:
-            self.send_error(400, "Bad request syntax (%r)" % requestline)
+            self.send_error(400, "Bad request syntax (%r)" % self.requestline)
             return
 
         self.method = method
